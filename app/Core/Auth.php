@@ -24,7 +24,10 @@ final class Auth
         if (session_status() === PHP_SESSION_ACTIVE) {
             return;
         }
-        $secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        // Behind a proxy such as Cloudflare the app sees plain HTTP; the proxy says what the visitor used.
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https'
+            || str_contains((string) ($_SERVER['HTTP_CF_VISITOR'] ?? ''), '"https"');
         session_name((string) Config::get('SESSION_NAME', 'hh_session'));
         session_set_cookie_params([
             'lifetime' => 0,
