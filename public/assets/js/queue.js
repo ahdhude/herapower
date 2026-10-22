@@ -82,8 +82,13 @@
     return m ? m.getAttribute('content') : '';
   }
 
+  /* Copies, so the page's reactive layer sees a change when an item is mutated here. */
+  function snapshot() {
+    return items.map(function (i) { return Object.assign({}, i); });
+  }
+
   function emit() {
-    window.dispatchEvent(new CustomEvent('hh:queue', { detail: items.slice() }));
+    window.dispatchEvent(new CustomEvent('hh:queue', { detail: snapshot() }));
   }
 
   function needAuth() {
@@ -151,7 +156,7 @@
   var HQ = {
     ready: null,
 
-    items: function () { return items.slice(); },
+    items: function () { return snapshot(); },
     count: function () { return items.length; },
     post: post,
     refreshCsrf: refreshCsrf,

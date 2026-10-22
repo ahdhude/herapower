@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Herahakatha — User Manual</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 18mm 16mm; @bottom-center { content: "Herahakatha user manual  ·  page " counter(page); font: 8.5pt "Segoe UI", Arial, sans-serif; color: #7a869f; } }
+  @page :first { margin: 0; @bottom-center { content: none; } }
+  :root { --ink: #0d1526; --muted: #5f6b84; --accent: #2d5bff; --accent-soft: #e8eeff; --line: #e1e6f0; --ok: #0f9d6a; --ok-soft: #e1f5ec; --warn: #b97500; --warn-soft: #fff1d1; --bad: #d6304a; --bad-soft: #fde6ea; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; color: var(--ink); }
+  h1, h2, h3 { line-height: 1.2; letter-spacing: -.01em; margin: 0; break-after: avoid; }
+  h1 { font-size: 22pt; color: var(--ink); margin-bottom: 6mm; padding-bottom: 3mm; border-bottom: 3px solid var(--accent); }
+  h2 { font-size: 14pt; margin: 8mm 0 3mm; color: var(--accent); }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm; }
+  p { margin: 0 0 3mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; } li { margin-bottom: 1.2mm; }
+  code, kbd { font-family: Consolas, "Courier New", monospace; font-size: .92em; background: #f1f4f9; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+  kbd { background: #fff; border-bottom-width: 2px; }
+  .chapter { break-before: page; }
+  .chapter:first-of-type { break-before: auto; }
+  .chapter.flow { break-before: auto; margin-top: 12mm; break-inside: avoid; }
+  .chapter.cont { break-before: auto; margin-top: 12mm; }
+
+  /* cover */
+  .cover { height: 297mm; padding: 28mm 22mm; color: #fff; background: radial-gradient(900px 500px at 15% 0%, #2a45c9 0%, transparent 60%), radial-gradient(700px 500px at 100% 100%, #6a3fe0 0%, transparent 55%), #0b1220; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+  .cover .mark { width: 22mm; height: 22mm; border-radius: 6mm; background: linear-gradient(135deg, #2d5bff, #7a4dff); display: grid; place-items: center; font-size: 30pt; box-shadow: 0 6px 24px rgba(80,90,255,.5); }
+  .cover h1 { color: #fff; border: 0; font-size: 38pt; margin: 14mm 0 3mm; padding: 0; }
+  .cover .sub { font-size: 16pt; color: #c5cffc; max-width: 120mm; line-height: 1.35; }
+  .cover .meta { color: #9fb0e8; font-size: 10.5pt; }
+  .cover .meta strong { color: #fff; }
+
+  /* contents */
+  .toc ol { list-style: none; padding: 0; counter-reset: c; }
+  .toc li { counter-increment: c; display: flex; gap: 4mm; padding: 2.2mm 0; border-bottom: 1px dotted var(--line); font-size: 11.5pt; }
+  .toc li::before { content: counter(c); color: var(--accent); font-weight: 700; width: 7mm; }
+  .toc li span { color: var(--muted); margin-left: auto; font-size: 9.5pt; }
+
+  /* callouts */
+  .box, .tip, .note, .stop, .good { border-radius: 3mm; padding: 3mm 4mm; margin: 3mm 0 4mm; break-inside: avoid; border: 1px solid transparent; }
+  .box b.t, .tip b.t, .note b.t, .stop b.t, .good b.t { display: block; font-size: 9pt; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1mm; }
+  .tip { background: var(--accent-soft); border-color: #cdd9ff; } .tip b.t { color: var(--accent); }
+  .note { background: var(--warn-soft); border-color: #f3d58b; } .note b.t { color: var(--warn); }
+  .stop { background: var(--bad-soft); border-color: #f5b9c3; } .stop b.t { color: var(--bad); }
+  .good { background: var(--ok-soft); border-color: #b4e2cd; } .good b.t { color: var(--ok); }
+
+  /* figures */
+  figure { margin: 0; break-inside: avoid; }
+  figcaption { font-size: 8.8pt; color: var(--muted); text-align: center; margin-top: 1.5mm; line-height: 1.35; }
+  .shot { display: block; width: 100%; border-radius: 3mm; border: 1px solid var(--line); box-shadow: 0 2px 8px rgba(15,23,42,.10); }
+  .pc { margin: 3mm auto 4mm; max-width: 150mm; } .pc .shot { width: 100%; }
+  .phones { display: flex; justify-content: center; gap: 6mm; margin: 3mm 0 4mm; align-items: flex-start; break-inside: avoid; }
+  .phones figure { width: 45mm; }
+  .phones.one figure { width: 46mm; }
+  .phones.small figure { width: 38mm; }
+  .side { display: flex; gap: 6mm; align-items: flex-start; margin: 2mm 0 4mm; break-inside: avoid; }
+  .side > div { flex: 1; } .side figure { width: 47mm; flex: none; }
+
+  /* tables */
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.6pt; break-inside: auto; }
+  th, td { text-align: left; vertical-align: top; padding: 2mm 2.5mm; border-bottom: 1px solid var(--line); }
+  th { background: #f3f6fc; font-size: 8.8pt; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  tr { break-inside: avoid; }
+  td.c, th.c { text-align: center; }
+  .yes { color: var(--ok); font-weight: 700; } .no { color: #b3bccd; }
+  .pill { display: inline-block; padding: 0 2.2mm; border-radius: 99px; font-size: 8.6pt; font-weight: 700; }
+  .p-ok { background: var(--ok-soft); color: var(--ok); } .p-warn { background: var(--warn-soft); color: var(--warn); } .p-bad { background: var(--bad-soft); color: var(--bad); } .p-info { background: var(--accent-soft); color: var(--accent); } .p-mute { background: #f1f4f9; color: var(--muted); }
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps li { counter-increment: s; position: relative; padding-left: 9mm; margin-bottom: 2.2mm; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 6mm; height: 6mm; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 9pt; display: grid; place-items: center; line-height: 6mm; text-align: center; }
+  .quick { border: 2px solid var(--accent); border-radius: 4mm; padding: 4mm 5mm; }
+  .two { display: flex; gap: 6mm; } .two > div { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<section class="cover">
+  <div>
+    <div class="mark">⚡</div>
+    <h1>Herahakatha</h1>
+    <div class="sub">User manual for the Canareef powerhouse logsheet</div>
+  </div>
+  <div class="meta">
+    <p>For operators, supervisors, managers and administrators.</p>
+    <p><strong>Website:</strong> herahakatha.canareef.cloud<br><strong>Version:</strong> 1.0 · October 2026</p>
+  </div>
+</section>
+
+<!-- ============================ CONTENTS ============================ -->
+<section class="toc">
+  <h1>Contents</h1>
+  <ol>
+    <li>Welcome and who can do what <span>what the app does, roles</span></li>
+    <li>Getting started <span>sign in, phone or PC, install on your phone</span></li>
+    <li>The Today screen <span>what is missing, what is due</span></li>
+    <li>Hourly feeder readings <span>the main job</span></li>
+    <li>Solar readings every 30 minutes</li>
+    <li>Daily meters <span>water, inverters, generators, diesel</span></li>
+    <li>Generator set log</li>
+    <li>When the internet drops <span>offline, waiting to send</span></li>
+    <li>Fixing a mistake</li>
+    <li>Reports <span>and downloads</span></li>
+    <li>For supervisors <span>approving a day, overrides</span></li>
+    <li>For administrators <span>meters, users, settings, importing history</span></li>
+    <li>Messages and what to do <span>quick answers</span></li>
+    <li>Questions and troubleshooting</li>
+    <li>One-page quick guide</li>
+  </ol>
+  <div class="box tip" style="margin-top:8mm"><b class="t">About the screenshots</b>All screenshots in this manual use sample data and sample people, so the numbers and names on your screen will be different.</div>
+</section>
+
+<!-- ============================ 1 ============================ -->
+<section class="chapter">
+  <h1>1. Welcome and who can do what</h1>
+  <p>Herahakatha replaces the Excel logsheets in the powerhouse. Operators type each reading into a phone or PC at the moment they read the meter. The app checks every number as it is typed, works out all the totals itself, and keeps everything in one place, so reports for a day, a month or a year are always one tap away.</p>
+  <h3>What is recorded</h3>
+  <table>
+    <tr><th>Log</th><th>When</th><th>What you enter</th></tr>
+    <tr><td><b>Feeder Reading 1</b></td><td>Every hour, 00:00 to 23:00</td><td>kW on the HV Network incomer and 11 feeders</td></tr>
+    <tr><td><b>Feeder Reading 2</b></td><td>Every hour, 00:00 to 23:00</td><td>kW on 14 feeders</td></tr>
+    <tr><td><b>Solar</b></td><td>Every 30 minutes, 06:00 to 18:00</td><td>Total plant kW from the inverter display</td></tr>
+    <tr><td><b>Daily meters</b></td><td>Once a day (morning)</td><td>Counters for water, solar inverters, generators and the diesel flow meter</td></tr>
+    <tr><td><b>Genset log</b></td><td>Every hour while a generator runs</td><td>Voltage, frequency, currents, load, oil pressure, temperature and more</td></tr>
+  </table>
+  <div class="box good"><b class="t">Nothing to calculate</b>You only ever type what the meter shows. Energy (kWh), daily use, kWh per litre and solar share are all worked out by the app.</div>
+
+  <h3>Roles</h3>
+  <p>Your administrator gives you one of four roles. The role decides which menu items you see.</p>
+  <table>
+    <tr><th></th><th class="c">Operator</th><th class="c">Supervisor</th><th class="c">Viewer</th><th class="c">Admin</th></tr>
+    <tr><td>Enter readings for today and yesterday</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+    <tr><td>Change older readings (with a reason)</td><td class="c no">–</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+    <tr><td>Accept a counter that went backwards (meter replaced)</td><td class="c no">–</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+    <tr><td>Approve a day</td><td class="c no">–</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+    <tr><td>Reports</td><td class="c">today's daily reports</td><td class="c yes">all</td><td class="c yes">all</td><td class="c yes">all</td></tr>
+    <tr><td>Meters, users, settings, audit log, import</td><td class="c no">–</td><td class="c no">–</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 2 ============================ -->
+<section class="chapter">
+  <h1>2. Getting started</h1>
+  <div class="side">
+    <figure><img class="shot" src="img/login-phone.jpg" alt=""><figcaption>The sign-in page</figcaption></figure>
+    <div>
+      <h3 style="margin-top:0">Sign in</h3>
+      <ol class="steps">
+        <li>Open <b>herahakatha.canareef.cloud</b> in your phone's browser or on a PC.</li>
+        <li>Type your <b>username</b> and <b>password</b>. Tap the eye icon to check what you typed.</li>
+        <li>Tap <b>Sign in</b>.</li>
+      </ol>
+      <div class="note"><b class="t">Locked out?</b>After 5 wrong passwords in a row the username is locked for 15 minutes. An administrator can unlock it sooner by setting a new password.</div>
+      <p>Forgotten your password? Ask an administrator. They can set a new one for you.</p>
+      <h3>Sign out</h3>
+      <p>Open <b>More</b> (phone) or use the <b>Sign out</b> button at the bottom of the left menu (PC). Always sign out on a shared phone or PC.</p>
+    </div>
+  </div>
+
+  <h2>One app, two layouts</h2>
+  <p>The same web address works everywhere. The screen rearranges itself to suit your device.</p>
+  <table>
+    <tr><th>On a phone</th><th>On a PC</th></tr>
+    <tr><td>Four buttons along the bottom: <b>Today · Enter · Reports · More</b>. Readings are entered one hour at a time, one big box per meter.</td><td>A menu down the left side. Readings are entered in a table showing the whole day, like the old Excel sheet.</td></tr>
+  </table>
+
+  <div class="pc"><figure><img class="shot" src="img/today-pc.jpg" alt=""><figcaption>The same Today screen on a PC: a menu down the left instead of buttons along the bottom</figcaption></figure></div>
+
+  <div class="side">
+    <figure><img class="shot" src="img/more-phone.jpg" alt=""><figcaption>The <b>More</b> page: your name, dark mode and Sign out</figcaption></figure>
+    <div>
+      <h3 style="margin-top:0">Put it on your phone's home screen</h3>
+      <p>You can add Herahakatha to your phone like an app, so it opens full screen with one tap.</p>
+      <ul>
+        <li><b>iPhone (Safari):</b> tap the Share button, then <b>Add to Home Screen</b>.</li>
+        <li><b>Android (Chrome):</b> tap the ⋮ menu, then <b>Add to Home screen</b> (or <b>Install app</b>).</li>
+      </ul>
+      <h3>Dark mode</h3>
+      <p>Tap the moon button at the top right of any screen to switch between light and dark. Dark mode is easier on the eyes at night. The app remembers your choice on that device.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 3 ============================ -->
+<section class="chapter">
+  <h1>3. The Today screen</h1>
+  <p>Today opens as soon as you sign in. It shows what has been done, what is due now and what has been missed, so you never have to hunt for the right sheet.</p>
+  <div class="phones">
+    <figure><img class="shot" src="img/today-phone.jpg" alt=""><figcaption>Today on a phone: the <b>Next up</b> panel and the first log cards</figcaption></figure>
+    <figure><img class="shot" src="img/today-cards-phone.jpg" alt=""><figcaption>Scroll down for the other logs</figcaption></figure>
+  </div>
+  <h3>The Next up panel</h3>
+  <p>The blue panel at the top tells you the most important thing to do right now, for example <b>Start 23:00 round</b>. Tap it to open that reading directly. When everything is up to date it turns green and says <b>All caught up</b>.</p>
+  <h3>One card per log</h3>
+  <table>
+    <tr><th>Card shows</th><th>Meaning</th></tr>
+    <tr><td><span class="pill p-info">Due</span> or a time like <b>23:00 due</b></td><td>That reading is due now and has not been entered yet.</td></tr>
+    <tr><td><span class="pill p-warn">Missed</span> (amber)</td><td>An earlier hour has no readings. Tap the card to go and fill it in.</td></tr>
+    <tr><td><span class="pill p-ok">Complete</span> (green)</td><td>Every meter has a reading for every slot so far.</td></tr>
+    <tr><td>Progress bar and “22 of 24 hours complete”</td><td>An hour counts as complete when <i>every</i> meter in that log has a value.</td></tr>
+    <tr><td>Genset log: <span class="pill p-ok">Running</span></td><td>Lists each generator that has been logged on the current log day.</td></tr>
+  </table>
+  <p>Tap any card to open that log. The page refreshes itself every minute.</p>
+  <p>The <b>Enter</b> tab shows the same logs as large buttons, each opening on the reading that is due.</p>
+</section>
+
+<!-- ============================ 4 ============================ -->
+<section class="chapter">
+  <h1>4. Hourly feeder readings</h1>
+  <p>This is the main job of every shift. <b>On the hour</b>, walk to the panels, read each feeder's kW <i>at that moment</i> and type it in. Do this for <b>Feeder Reading 1</b> and <b>Feeder Reading 2</b>.</p>
+
+  <h2>On a phone: one hour at a time</h2>
+  <div class="side">
+    <figure><img class="shot" src="img/feeder-empty-phone.jpg" alt=""><figcaption>Feeder Reading 1, opened on the hour that is due</figcaption></figure>
+    <div>
+      <ol class="steps">
+        <li>Tap <b>Enter</b>, then <b>Feeder Reading 1</b> (or tap <b>Next up</b> on the Today screen). It opens on the hour that is due.</li>
+        <li>Tap the first box (<b>HV Network</b>). The number keypad appears.</li>
+        <li>Type the kW you read on the panel, for example <code>281.4</code>.</li>
+        <li>Press <b>Next / Enter</b> on the keypad. The value is <b>saved immediately</b> and the cursor jumps to the next feeder.</li>
+        <li>Repeat down the list in the order you walk the panels.</li>
+        <li>Switch to <b>Feeder Reading 2</b> with the tabs at the top and do the same.</li>
+      </ol>
+      <div class="good"><b class="t">There is no Save button</b>Each value is saved the moment you move on. If your phone dies half way through, everything already entered is safe.</div>
+      <h3>Finding your way around the screen</h3>
+      <ul>
+        <li><b>Big time</b> (23:00): the hour you are entering. Use the arrows to go to an earlier or later hour.</li>
+        <li><b>Hour strip</b>: <span class="pill p-ok">green</span> complete, <span class="pill p-info">blue outline</span> due, <span class="pill p-warn">amber</span> missed. Tap any hour to jump to it.</li>
+        <li><b>Date button</b>: <i>Today</i> by default. Operators can go back to yesterday.</li>
+        <li><b>last 13.4</b> under a name shows last hour's value, a handy check.</li>
+        <li><b>This hour</b> bar at the bottom adds up the feeders on this page.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>What the little icons mean</h3>
+  <table>
+    <tr><th style="width:34mm">Icon / tag</th><th>Meaning</th></tr>
+    <tr><td>✔ green tick</td><td>Saved.</td></tr>
+    <tr><td>⚠ amber triangle</td><td>Saved <i>not yet</i>: the value looks unusual and needs your decision (see below).</td></tr>
+    <tr><td>✖ red cross</td><td>Not saved: the value was refused. Read the red message and fix it.</td></tr>
+    <tr><td>⌛ blue hourglass</td><td>Typed while offline. It will send by itself when the connection returns.</td></tr>
+    <tr><td><span class="pill p-warn">late</span></td><td>Saved more than 20 minutes after its hour. The reading is kept; the tag only shows when rounds ran late.</td></tr>
+    <tr><td>Name tag</td><td>Who entered the value.</td></tr>
+  </table>
+
+  <h2>If a value is wrong or unusual</h2>
+  <p>The app checks every number as you type it. There are two kinds of problem.</p>
+  <div class="phones">
+    <figure><img class="shot" src="img/feeder-error-phone.jpg" alt=""><figcaption><b>Blocked:</b> <code>11..21</code> has two decimal points. It cannot be saved, so tap <b>Fix</b> and retype.</figcaption></figure>
+    <figure><img class="shot" src="img/feeder-warning-phone.jpg" alt=""><figcaption><b>Warning:</b> 900 is far from the usual 6.3. Check for a missed decimal, then <b>Fix</b> or <b>Save anyway</b>.</figcaption></figure>
+  </div>
+  <table>
+    <tr><th style="width:34mm">Kind</th><th>What happens</th><th>What you do</th></tr>
+    <tr><td><span class="pill p-bad">Blocked</span> (red)</td><td>The value is <b>not saved</b>. Typical reasons: letters or extra dots, a blank, a negative number, a time that has not happened yet.</td><td>Tap <b>Fix</b> and type it again.</td></tr>
+    <tr><td><span class="pill p-warn">Warning</span> (amber)</td><td>The value is saved <b>only if you confirm</b>. The app thinks it is far from what that feeder usually reads at that hour, or outside its normal range.</td><td>Re-read the panel. If you made a slip, tap <b>Fix</b>. If the number is really correct (a feeder tripped, a machine stopped), optionally type a note and tap <b>Save anyway</b>.</td></tr>
+  </table>
+  <div class="box tip"><b class="t">Tip: a missing decimal point is the usual cause</b>Typing <code>354</code> instead of <code>35.4</code> is the commonest slip. If a warning appears, look at the decimal point first.</div>
+  <div class="box note"><b class="t">Zero is fine</b><code>0</code> is a normal reading (for example the Heat Ex. Pump at night). Leave a box <i>empty</i> only if the meter was not read.</div>
+
+  <h2>On a PC: the whole day in a table</h2>
+  <div class="pc"><figure><img class="shot" src="img/feeder-grid-pc.jpg" alt=""><figcaption>Feeder Reading 2 on a PC: 24 hours down the side, feeders across the top, totals pinned at the bottom</figcaption></figure></div>
+  <ul>
+    <li>Click a cell and type. <kbd>Enter</kbd> saves and moves down; the arrow keys move between cells.</li>
+    <li><b>Paste from Excel:</b> copy a block of cells in Excel, click the first cell here and press <kbd>Ctrl</kbd>+<kbd>V</kbd>. Every pasted cell is checked and saved one by one. Anything needing attention is listed under the table in <b>Needs a look</b>.</li>
+    <li>The bottom rows show each feeder's total kW and <b>Est. kWh</b> for the day.</li>
+    <li>Hours that have not happened yet are greyed out.</li>
+  </ul>
+</section>
+
+<!-- ============================ 5 ============================ -->
+<section class="chapter flow">
+  <h1>5. Solar readings every 30 minutes</h1>
+  <p>From 06:00 to 18:00, every half hour, read the <b>total plant kW from the inverter display</b> and type it in. It works exactly like the feeder screen, with one box for each solar plant.</p>
+  <div class="side">
+    <figure><img class="shot" src="img/solar-phone.jpg" alt=""><figcaption>The solar screen with today's curve</figcaption></figure>
+    <div>
+      <ol class="steps">
+        <li>Tap <b>Enter → Solar</b>. It opens on the half hour that is due.</li>
+        <li>Type the plant kW and press <b>Enter</b>. It saves straight away.</li>
+        <li>Look at the <b>curve</b> underneath: it redraws after every save. A missed decimal point shows up as a sudden dip.</li>
+      </ol>
+      <div class="tip"><b class="t">Spot a dip?</b>If one point drops far below its neighbours (for example 3.5 between 240 and 260), you probably forgot a digit. Tap that time in the strip and correct it.</div>
+      <p>If a new solar plant is added by the administrator, it appears here automatically as another box.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 6 ============================ -->
+<section class="chapter flow">
+  <h1>6. Daily meters</h1>
+  <p>Once a day, in the morning, read the running <b>counters</b> (they only ever go up): the water meter, every solar inverter, the four generators and the powerhouse diesel flow meter.</p>
+  <div class="side">
+    <figure><img class="shot" src="img/daily-phone.jpg" alt=""><figcaption>Daily meters: type the counter, see yesterday's use at once</figcaption></figure>
+    <div>
+      <ol class="steps">
+        <li>Tap <b>Enter → Daily meters</b>.</li>
+        <li>For each meter, type the number <b>exactly as it shows on the meter</b>.</li>
+        <li>Press <b>Enter</b>. It is saved and the green <b>Used yesterday</b> figure appears.</li>
+      </ol>
+      <h3>How “Used yesterday” works</h3>
+      <p>It is <i>this morning's reading minus yesterday's reading</i>, multiplied by the meter's multiplier. The generator counters, for example, are read ÷10 to get kWh, so a tag such as <code>× 0.1</code> is shown next to them. You never need to do the sum.</p>
+      <ul>
+        <li>The small text under each name shows the previous reading to compare with.</li>
+        <li>Each section shows how many meters you have entered (“1 of 9”).</li>
+        <li>Meters that are switched off by the administrator are hidden.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box stop"><b class="t">A counter can't go backwards</b>If you type a number <i>lower</i> than the previous reading, it is refused with “Lower than the previous reading…”. Re-read the meter. If the meter really was replaced or reset, ask a supervisor, who can accept it with a reason.</div>
+  <div class="box note"><b class="t">Warning: unusual daily use</b>If yesterday's use would be far (about 40%) from the usual 7-day average you get an amber warning. Check the digits, then <b>Fix</b> or <b>Save anyway</b>.</div>
+</section>
+
+<!-- ============================ 7 ============================ -->
+<section class="chapter">
+  <h1>7. Generator set log</h1>
+  <p>While a generator is running, log it every hour. The log day runs from <b>08:00 to 07:00 the next morning</b>, so a night shift stays on one log.</p>
+  <div class="phones small">
+    <figure><img class="shot" src="img/genset-list-phone.jpg" alt=""><figcaption>One card per hour. Pick the generator with the tabs at the top.</figcaption></figure>
+    <figure><img class="shot" src="img/genset-fields-phone.jpg" alt=""><figcaption>Tap an hour to open its fields</figcaption></figure>
+  </div>
+  <ol class="steps">
+    <li>Tap <b>Enter → Genset log</b> and choose <b>Generator 1–4</b> with the tabs.</li>
+    <li>The latest hour that is not logged yet opens automatically. (Tap any other hour to open it.)</li>
+    <li>Fill in what you can read: voltage, frequency, currents R/Y/B, power factor, active load, oil pressure, water temperature, energy, running hours, battery, RPM and solar active power.</li>
+    <li>Under <b>Visual check</b> tap <b>OK</b> or <b>Not OK</b> and add a note if needed (leaks, noise, smell).</li>
+    <li>Tap <b>Save hour</b>. The next hour opens for you.</li>
+  </ol>
+  <table>
+    <tr><th>Button / sign</th><th>What it does</th></tr>
+    <tr><td><b>Copy last hour</b></td><td>Fills this hour with last hour's values so you only change what moved.</td></tr>
+    <tr><td><span class="pill p-ok">Logged · name</span></td><td>This hour is saved; the name shows who did it.</td></tr>
+    <tr><td><span class="pill p-mute">Not logged</span> / <span class="pill p-mute">Later</span></td><td>Nothing entered yet / the hour has not started.</td></tr>
+    <tr><td><span class="pill p-bad">Out of limit</span></td><td>Oil pressure, water temperature, battery, frequency or voltage is outside the limits set by the engineer, or the visual check was <i>Not OK</i>. You are asked to confirm with <b>Save anyway</b>, and the hour is flagged for supervisors.</td></tr>
+  </table>
+  <div class="note"><b class="t">Limits</b>If a yellow banner says no alarm limits are set, out-of-range values are simply not flagged yet. An administrator adds the limits under <b>Settings</b>.</div>
+</section>
+
+<!-- ============================ 8 ============================ -->
+<section class="chapter flow">
+  <h1>8. When the internet drops</h1>
+  <p>The powerhouse depends on the resort's internet, but your round must not stop. If the connection goes, <b>keep entering readings as normal</b>.</p>
+  <ul>
+    <li>A small badge at the top shows <b>Offline</b> (amber) and how many values are <b>waiting</b>.</li>
+    <li>Each value you type shows a blue ⌛ hourglass: it is stored safely <b>on your phone</b>.</li>
+    <li>When the connection comes back the values are sent <b>automatically</b>, about once a minute. Nothing is entered twice.</li>
+  </ul>
+  <div class="phones">
+    <figure><img class="shot" src="img/waiting-phone.jpg" alt=""><figcaption>The <b>Waiting to send</b> panel on the Today screen. Tap <b>Send now</b> to try straight away.</figcaption></figure>
+    <figure><img class="shot" src="img/held-phone.jpg" alt=""><figcaption>If the app finds a value that needs checking once it reaches the server, it is kept here: <b>Discard</b> it or <b>Save anyway</b>.</figcaption></figure>
+  </div>
+  <h3>Good to know</h3>
+  <ul>
+    <li>Open the app once while you are online so your phone has the screens ready. After that the entry screens open even without a connection.</li>
+    <li>Do not clear your browser's data or “site data” while values are waiting.</li>
+    <li>If your session ended while you were offline, a box says <b>Sign in again</b>. Sign in, then tap <b>I have signed in — send now</b>. Your waiting values are still there.</li>
+    <li>Reports and other people's latest entries need a connection.</li>
+  </ul>
+</section>
+
+<!-- ============================ 9 ============================ -->
+<section class="chapter flow">
+  <h1>9. Fixing a mistake</h1>
+  <h3>You noticed a wrong value you saved</h3>
+  <ol class="steps">
+    <li>Open the same log and the same hour (use the date button and the hour strip).</li>
+    <li>Tap the box, replace the number and press <b>Enter</b>.</li>
+  </ol>
+  <p>The new value replaces the old one, and the app keeps a record of the change (old value, new value, who and when) in the audit log.</p>
+  <table>
+    <tr><th>Who</th><th>Which readings can they change</th></tr>
+    <tr><td><b>Operator</b></td><td>Today and yesterday. Older days are refused with “Operators can only enter today and yesterday. Ask a supervisor.”</td></tr>
+    <tr><td><b>Supervisor / Admin</b></td><td>Any day. For a reading older than yesterday the app asks <b>why</b> you are changing it, and the reason is saved.</td></tr>
+  </table>
+  <div class="box tip"><b class="t">Missed an hour?</b>Enter it late. The reading is kept, shows a <span class="pill p-warn">late</span> tag, and the day is complete again. It is far better to enter a late reading than to leave a gap.</div>
+  <div class="box note"><b class="t">Can't delete a value</b>Clearing a box does not remove a saved reading. If a saved number is wrong, type the correct number over it.</div>
+</section>
+
+<!-- ============================ 10 ============================ -->
+<section class="chapter">
+  <h1>10. Reports</h1>
+  <p>Every report is built from the saved readings, so nothing is copied between sheets. Tap <b>Reports</b>.</p>
+  <div class="side">
+    <figure><img class="shot" src="img/reports-phone.jpg" alt=""><figcaption>The Reports list (operator view: monthly reports show a padlock)</figcaption></figure>
+    <div>
+      <table>
+        <tr><th>Report</th><th>Shows</th></tr>
+        <tr><td><b>Daily feeder</b></td><td>24 hours × every feeder, estimated kWh, peak hour, and the HV Network against the sum of the feeders.</td></tr>
+        <tr><td><b>Daily solar</b></td><td>Half-hourly output, estimated energy, and a cross-check against the inverter counters.</td></tr>
+        <tr><td><b>Water &amp; Energy statistics</b></td><td>Per day: water, generator kWh, solar kWh, diesel, kWh per litre, solar share.</td></tr>
+        <tr><td><b>Feeder ranking</b></td><td>Estimated kWh per feeder for a month, share of total, change on last month.</td></tr>
+        <tr><td><b>Genset</b></td><td>Hours logged, kWh, average load and power factor per generator.</td></tr>
+        <tr><td><b>Completeness</b></td><td>Slots filled against expected, late readings, warnings saved anyway and who entered.</td></tr>
+      </table>
+      <p>Operators see today's daily reports. Supervisors, viewers and administrators see everything.</p>
+    </div>
+  </div>
+  <h3>Choosing the date or month</h3>
+  <p>Use the date or month box at the top of a report. It updates as soon as you pick.</p>
+  <h3>Downloading and printing</h3>
+  <p>The buttons at the top right of each report: <b>CSV</b> (opens in Excel), <b>Excel</b>, <b>PDF</b> and <b>Print</b>.</p>
+  <div class="pc"><figure><img class="shot" src="img/monthly-pc.jpg" alt=""><figcaption>Water &amp; Energy statistics for a month: one row per day, totals and averages at the bottom</figcaption></figure></div>
+  <div class="box note"><b class="t">Why is a day blank?</b>Daily use comes from <i>two</i> counter readings (the day and the next morning). The most recent day shows only after the next morning's daily meters are entered. Days with no readings show a dash.</div>
+</section>
+
+<section>
+  <h2>Feeder ranking: table or graph</h2>
+  <p>Above the ranking, choose <b>Table</b> or <b>Graph</b>. The graph is a bar chart of estimated kWh per feeder, highest first. Hover (or tap) a bar to see its share of the total and its change on last month. Amber bars are up more than 10%; green bars are down more than 10%. The app remembers which view you used last.</p>
+  <div class="pc"><figure><img class="shot" src="img/ranking-graph-pc.jpg" alt=""><figcaption>Feeder consumption ranking in graph view</figcaption></figure></div>
+  <div class="pc"><figure><img class="shot" src="img/feeder-report-pc.jpg" alt=""><figcaption>The Daily feeder report: every hour for every feeder, with the day's totals at the bottom</figcaption></figure></div>
+</section>
+
+<!-- ============================ 11 ============================ -->
+<section class="chapter flow">
+  <h1>11. For supervisors</h1>
+  <h2>Approving a day</h2>
+  <p>At the bottom of the Today screen you will find <b>Yesterday's review</b>. Check that each log looks complete, then tap <b>Approve</b> next to it. The card then shows <i>Approved by your name</i>.</p>
+  <div class="pc"><figure><img class="shot" src="img/review-pc.jpg" alt=""><figcaption>Yesterday's review: one Approve button per log</figcaption></figure></div>
+  <ul>
+    <li>Approving is a sign-off that the readings were checked. It does not lock the day: corrections are still possible, with a reason.</li>
+    <li>Use <b>Reports → Completeness</b> to see missing slots, late readings and warnings saved anyway before you approve.</li>
+  </ul>
+  <h2>Other supervisor powers</h2>
+  <table>
+    <tr><th>Situation</th><th>What to do</th></tr>
+    <tr><td>An operator needs an older reading changed</td><td>Open that day and hour, type the correct number and, when asked, give the reason.</td></tr>
+    <tr><td>A meter was replaced or reset, so the counter is lower</td><td>Type the new reading on the Daily meters screen. When the red “Lower than the previous reading” message appears, type a reason (for example <i>Meter replaced</i>) and tap <b>Override: meter replaced / reset</b>.</td></tr>
+    <tr><td>You need figures for a month</td><td>Use the monthly reports and download the Excel or PDF.</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 12 ============================ -->
+<section class="chapter">
+  <h1>12. For administrators</h1>
+  <p>Administrators have an extra <b>Admin</b> section in the left menu (on a phone, under <b>More</b>).</p>
+
+  <h2>Meters</h2>
+  <div class="pc"><figure><img class="shot" src="img/meters-pc.jpg" alt=""><figcaption>Admin → Meters, listed by group in the order they are walked</figcaption></figure></div>
+  <ul>
+    <li><b>↑ ↓</b> arrows change the walking order on the entry screen.</li>
+    <li><b>Switch off</b> hides a meter from the entry screens without losing its history (for example an unused water line). <b>Switch on</b> brings it back.</li>
+    <li><b>Edit</b> changes a meter's name, unit, limits and so on. A meter that already has readings keeps its type and multiplier locked.</li>
+    <li>A meter that has readings can never be deleted, only switched off.</li>
+  </ul>
+  <h3>Adding a meter (for example a new feeder, water line or solar plant)</h3>
+  <div class="pc"><figure><img class="shot" src="img/meter-form-pc.jpg" alt=""><figcaption>Add meter. Choosing the <b>Kind</b> fills in sensible defaults.</figcaption></figure></div>
+  <ol class="steps">
+    <li>Tap <b>Add meter</b> and choose the <b>Kind</b>. The group, reading type, unit and timing fill in for you.</li>
+    <li>Type the <b>Name</b> exactly as on the panel and a short <b>Code</b>.</li>
+    <li>Optional: <b>Min / Max</b> values to get a warning outside the normal range.</li>
+    <li>For a new <b>solar inverter</b>, choose the <b>Solar plant</b> it belongs to.</li>
+    <li>Tap <b>Add meter</b>. It appears on the entry screens straight away, and all reports include it.</li>
+  </ol>
+
+  <h2>Users</h2>
+  <div class="pc"><figure><img class="shot" src="img/users-pc.jpg" alt=""><figcaption>Admin → Users</figcaption></figure></div>
+  <ul>
+    <li><b>Add a person:</b> full name, a username (letters, numbers, dot, dash or underscore), a password of at least 8 characters, and a role.</li>
+    <li><b>Edit:</b> change a name or role, set a <b>new password</b> (this also clears a lockout), or untick <b>Can sign in</b> to disable someone who has left. Their past entries stay.</li>
+    <li>You cannot remove your own admin access.</li>
+    <li>Give new people a temporary password and ask them to tell you if they forget it; there is no self-service reset.</li>
+  </ul>
+
+  <h2>Settings</h2>
+  <div class="pc"><figure><img class="shot" src="img/settings-pc.jpg" alt=""><figcaption>Admin → Settings: the rules the app checks against</figcaption></figure></div>
+  <table>
+    <tr><th>Setting</th><th>What it does</th></tr>
+    <tr><td>Late after (minutes)</td><td>A reading saved later than this after its hour gets the <i>late</i> tag. Default 20.</td></tr>
+    <tr><td>Operator edit window (days)</td><td>1 means operators can enter today and yesterday.</td></tr>
+    <tr><td>Median window, Spike factor and floors</td><td>How unusual a feeder or solar value must be to raise a warning. Defaults suit the powerhouse; change them only after a few weeks of clean data.</td></tr>
+    <tr><td>Daily change (%)</td><td>How far a day's counter use may differ from the 7-day average before a warning.</td></tr>
+    <tr><td>Compare feeders with HV Network</td><td>Turn on once you have confirmed all feeders sit under the HV Network.</td></tr>
+    <tr><td>Generator limits</td><td>Minimum oil pressure, maximum water temperature, minimum battery, frequency and voltage range. Leave blank to skip a check. Values come from the chief engineer.</td></tr>
+    <tr><td>Alert email</td><td>Where the nightly “what was missed yesterday” summary is sent.</td></tr>
+  </table>
+
+  <h2>Audit log</h2>
+  <p>Lists every reading that was changed after it was first saved: when, which meter and slot, old and new value, who changed it and why.</p>
+
+  <h2>Import history</h2>
+  <p>Brings the old Excel logsheets into the app, one month at a time, so reports and comparisons go back in time.</p>
+  <ol class="steps">
+    <li>Go to <b>Admin → Import history</b>, choose the file (a feeder workbook, a solar log, or a Water &amp; Energy workbook) and the month.</li>
+    <li>Tap <b>Check the file</b>. You see exactly what would be added, and nothing is saved yet.</li>
+    <li>Choose how to treat readings already in the app (the default keeps them) and tap <b>Import</b>.</li>
+    <li>Open the batch and work through the <b>review list</b>: cells that were not numbers (such as <code>11..21</code>) and values that look like a missed decimal point. Each has a suggested fix you accept, correct or dismiss.</li>
+    <li>A whole import can be <b>undone</b> from its page.</li>
+  </ol>
+  <div class="note"><b class="t">Dates</b>The month you choose plus the day number at the start of each sheet's name decide the dates. The date typed inside a sheet is ignored because it is often wrong.</div>
+</section>
+
+<!-- ============================ 13 ============================ -->
+<section class="chapter">
+  <h1>13. Messages and what to do</h1>
+  <table>
+    <tr><th style="width:62mm">Message</th><th style="width:20mm">Kind</th><th>What to do</th></tr>
+    <tr><td>Enter a plain number such as 354 or 12.5.</td><td><span class="pill p-bad">Blocked</span></td><td>The box has letters, a second decimal point, a slash or is blank. Retype it.</td></tr>
+    <tr><td>A reading can't be negative.</td><td><span class="pill p-bad">Blocked</span></td><td>Remove the minus sign.</td></tr>
+    <tr><td>That time hasn't happened yet.</td><td><span class="pill p-bad">Blocked</span></td><td>You are entering a later hour. Go back to the due hour.</td></tr>
+    <tr><td>Operators can only enter today and yesterday. Ask a supervisor.</td><td><span class="pill p-bad">Blocked</span></td><td>Ask a supervisor to enter or change that reading.</td></tr>
+    <tr><td>That time isn't a reading slot for this meter.</td><td><span class="pill p-bad">Blocked</span></td><td>Readings are on the hour (or every 30 min for solar). Use the hour strip.</td></tr>
+    <tr><td>Lower than the previous reading … Check the meter.</td><td><span class="pill p-bad">Blocked</span></td><td>Re-read the counter. If the meter was replaced or reset, ask a supervisor to override.</td></tr>
+    <tr><td>Higher than the next day's reading …</td><td><span class="pill p-bad">Blocked</span></td><td>A later day already has a smaller counter. Check both days' readings.</td></tr>
+    <tr><td>Say why you are changing an older reading.</td><td><span class="pill p-bad">Blocked</span></td><td>(Supervisors) type the reason and tap <b>Save change</b>.</td></tr>
+    <tr><td>Far from the usual … Check for a missed decimal.</td><td><span class="pill p-warn">Warning</span></td><td>Re-read the panel. <b>Fix</b> a slip; <b>Save anyway</b> if the value is genuine.</td></tr>
+    <tr><td>Outside the usual range (min to max).</td><td><span class="pill p-warn">Warning</span></td><td>As above. The range is set by the administrator for that meter.</td></tr>
+    <tr><td>Yesterday's use would be … away from the 7-day average.</td><td><span class="pill p-warn">Warning</span></td><td>Daily meters. Check the digits, then <b>Fix</b> or <b>Save anyway</b>.</td></tr>
+    <tr><td>Oil pressure / water temperature … is outside the limit.</td><td><span class="pill p-bad">Out of limit</span></td><td>Genset log. Deal with the engine, then <b>Save anyway</b> to record it truthfully.</td></tr>
+    <tr><td>Enter at least one value.</td><td><span class="pill p-bad">Blocked</span></td><td>Genset log: you tapped Save hour with every field empty.</td></tr>
+    <tr><td>Your session ended. Sign in again.</td><td><span class="pill p-info">Info</span></td><td>Sign in. Anything you typed offline is still waiting and will send.</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 14 ============================ -->
+<section class="chapter flow">
+  <h1>14. Questions and troubleshooting</h1>
+  <h3>I typed a value and nothing happened.</h3>
+  <p>The value saves when you press <b>Enter / Next</b> or tap another box. Check the icon at the right of the box: a green tick means saved, a red cross means it was refused (read the message), a pencil means you have not left the box yet.</p>
+  <h3>I can't find yesterday's hour.</h3>
+  <p>Use the date button at the top of the entry screen and tap the left arrow. Operators can go back one day. Older days need a supervisor.</p>
+  <h3>The page shows “Offline” but my internet is fine.</h3>
+  <p>Wait a few seconds, then tap the badge at the top to send now. If it stays offline, check the phone's Wi-Fi.</p>
+  <h3>I entered an hour twice by mistake.</h3>
+  <p>There is only ever one value per meter per hour. Typing again simply replaces it.</p>
+  <h3>The Today screen says an hour is “missed” but I entered it.</h3>
+  <p>An hour only counts as complete when <i>every</i> meter in that log has a value. Open the hour and look for an empty box (a grey circle on the right).</p>
+  <h3>A feeder or generator isn't on the screen.</h3>
+  <p>It may be switched off. Ask an administrator to check <b>Admin → Meters</b>.</p>
+  <h3>The numbers in a report look wrong.</h3>
+  <p>First open <b>Reports → Completeness</b> for that day to see whether readings are missing. A missing or mistyped reading changes totals. Fix the reading and the report updates by itself.</p>
+  <h3>I forgot my password.</h3>
+  <p>Ask an administrator to set a new one (Admin → Users → Edit).</p>
+  <h3>Who do I contact?</h3>
+  <p>Your shift supervisor first. For anything the supervisor can't fix, contact the system administrator.</p>
+</section>
+
+<!-- ============================ 15 ============================ -->
+<section class="chapter">
+  <h1>15. One-page quick guide</h1>
+  <div class="quick">
+    <div class="two">
+      <div>
+        <h3 style="margin-top:0">Every hour (on the hour)</h3>
+        <ol class="steps">
+          <li><b>Enter → Feeder Reading 1</b>. It opens on the due hour.</li>
+          <li>Tap a box, type the kW, press <b>Enter</b>. Saved at once; the cursor moves on.</li>
+          <li>Do <b>Feeder Reading 2</b> the same way.</li>
+          <li>Red message? Tap <b>Fix</b>. Amber warning? Re-read the meter, then <b>Fix</b> or <b>Save anyway</b>.</li>
+        </ol>
+        <h3>Every 30 minutes, 06:00–18:00</h3>
+        <p><b>Enter → Solar</b>: type the plant kW from the inverter display.</p>
+        <h3>Every morning</h3>
+        <p><b>Enter → Daily meters</b>: type each counter exactly as shown. “Used yesterday” is worked out for you.</p>
+      </div>
+      <div>
+        <h3 style="margin-top:0">While a generator runs</h3>
+        <p><b>Enter → Genset log</b>: pick the generator, open the hour, fill in the fields, <b>Save hour</b>.</p>
+        <h3>Colours</h3>
+        <table style="margin:0">
+          <tr><td><span class="pill p-ok">Green</span></td><td>Saved / complete</td></tr>
+          <tr><td><span class="pill p-info">Blue</span></td><td>Due now / waiting to send</td></tr>
+          <tr><td><span class="pill p-warn">Amber</span></td><td>Check this value / missed</td></tr>
+          <tr><td><span class="pill p-bad">Red</span></td><td>Refused, fix it</td></tr>
+        </table>
+        <h3>Rules to remember</h3>
+        <ul>
+          <li>Plain numbers only, one decimal point. Zero is allowed.</li>
+          <li>Operators: today and yesterday only.</li>
+          <li>Counters never go backwards.</li>
+          <li>Internet down? Keep going. Values send later.</li>
+          <li>Wrong value? Type the right one over it.</li>
+          <li>Sign out on shared devices.</li>
+        </ul>
+      </div>
+    </div>
+    <p style="text-align:center;margin:4mm 0 0;color:var(--muted)">herahakatha.canareef.cloud</p>
+  </div>
+</section>
+
+</body>
+</html>
