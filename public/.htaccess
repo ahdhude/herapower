@@ -1,0 +1,22 @@
+AddType application/manifest+json .webmanifest
+AddType image/svg+xml .svg
+
+# Force HTTPS in production (uncomment on Hostinger once SSL is on)
+# RewriteCond %{HTTPS} off
+# RewriteCond %{HTTP_HOST} !^(localhost|.*\.test)(:\d+)?$ [NC]
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# The service worker must be able to control the whole site and must never be served stale
+<IfModule mod_headers.c>
+  <Files "sw.js">
+    Header set Service-Worker-Allowed "/"
+    Header set Cache-Control "no-cache"
+  </Files>
+</IfModule>
+
+RewriteEngine On
+RewriteRule ^favicon\.ico$ assets/icons/icon.svg [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

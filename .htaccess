@@ -1,0 +1,5 @@
+# Send everything into public/ and keep the app code unreachable.
+RewriteEngine On
+RewriteRule ^(app|config|database|storage|cli|vendor|views|tests)(/|$) - [F,L]
+RewriteCond %{REQUEST_URI} !/public/
+RewriteRule ^(.*)$ public/$1 [L]

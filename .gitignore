@@ -1,0 +1,9 @@
+/vendor/
+/config/env.php
+/storage/logs/*
+/storage/backups/*
+/storage/imports/*
+/storage/demo-credentials.txt
+!/storage/**/.gitkeep
+.DS_Store
+Thumbs.db
