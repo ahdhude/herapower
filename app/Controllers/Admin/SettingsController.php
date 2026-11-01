@@ -14,8 +14,8 @@ final class SettingsController
     public const FIELDS = [
         'Entry rules' => [
             'late_minutes'       => ['Late after (minutes)', 'A reading saved this long after its slot is flagged late.', 'int'],
-            'operator_edit_days' => ['Operator edit window (days)', 'How far back operators can change readings. 1 = today and yesterday.', 'int'],
-            'view_back_days'     => ['Look-back for operators and viewers (days)', 'How far back they can open feeder, solar, daily-meter and genset screens to look. Operators can still only change the days above; older days open read-only. Supervisors and admins can always go back a year.', 'int'],
+            'operator_edit_days' => ['Operator change window (days)', 'How far back operators can CHANGE a reading that is already saved. 1 = today and yesterday. On older days within the look-back below, operators can only add readings that are missing.', 'int'],
+            'view_back_days'     => ['Look-back for operators and viewers (days)', 'How far back they can open the screens. Operators can also ADD missing readings that far back (catch-up); viewers only look. Supervisors and admins can always go back a year.', 'int'],
             'genset_day_start'   => ['Genset log day starts', 'The log day runs 24 hours from this time.', 'time'],
         ],
         'Warnings' => [

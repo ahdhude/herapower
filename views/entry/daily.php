@@ -19,6 +19,8 @@
 
   <div class="hh-banner hh-banner--info" x-show="readOnly" x-cloak><i class="bi bi-eye"></i>
     <span x-text="cfg.editFrom === null ? 'You can look at readings here but not change them.' : 'View only: this day is older than you can change. Ask a supervisor if something needs correcting.'"></span></div>
+  <div class="hh-banner hh-banner--info" x-show="olderDay" x-cloak><i class="bi bi-clock-history"></i>
+    <span>This is an earlier day. You can add readings that are missing; readings already saved can only be changed by a supervisor.</span></div>
   <div class="hh-banner hh-banner--warn" x-show="fromCache"><i class="bi bi-cloud-slash"></i> You're offline — showing the last saved copy. New values will send when the connection returns.</div>
   <div class="hh-banner hh-banner--error" x-show="loadError" x-text="loadError"></div>
   <div class="hh-skeleton" x-show="loading"><span></span><span></span><span></span><span></span></div>
@@ -45,7 +47,7 @@
           </div>
           <div class="hh-drow__input">
             <input :id="'d' + m.id" class="hh-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Reading"
-                   :data-idx="allIndex(m.id)" :disabled="readOnly" x-model="c.value" @input="touch(c)" @blur="commit(c)" @keydown.enter.prevent="enter($event, allIndex(m.id))" :aria-label="m.name + ' reading'">
+                   :data-idx="allIndex(m.id)" :disabled="readOnly || locked(c)" x-model="c.value" @input="touch(c)" @blur="commit(c)" @keydown.enter.prevent="enter($event, allIndex(m.id))" :aria-label="m.name + ' reading'">
             <span class="hh-state" :class="'is-' + c.state" :title="stateText(c)"><i class="bi" :class="stateIcon(c)"></i></span>
           </div>
           <div class="hh-drow__use" :class="{'is-empty': use(m) === null}">

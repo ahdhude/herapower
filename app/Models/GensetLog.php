@@ -7,6 +7,7 @@ use App\Core\Auth;
 use App\Core\DB;
 use App\Services\ReadingValidator;
 use App\Services\Slots;
+use App\Services\Window;
 
 final class GensetLog
 {
@@ -101,9 +102,10 @@ final class GensetLog
             $errors[] = ['code' => 'FUTURE', 'message' => 'That time hasn\'t happened yet.'];
         }
         if (($user['role'] ?? '') === 'operator') {
-            $days = Setting::int('operator_edit_days', 1);
-            if ($at < $now->setTime(0, 0)->modify("-{$days} days")) {
-                $errors[] = ['code' => 'OUT_OF_WINDOW', 'message' => 'Operators can only enter today and yesterday. Ask a supervisor.'];
+            if ($at < Window::addFrom($now)) {
+                $errors[] = ['code' => 'OUT_OF_WINDOW', 'message' => 'Operators can add logs up to ' . Window::lookBackDays() . ' days back. Ask a supervisor.'];
+            } elseif ($at < Window::changeFrom($now) && DB::val('SELECT 1 FROM genset_logs WHERE meter_id = ? AND log_at = ?', [$meter['id'], $at->format('Y-m-d H:i:s')])) {
+                $errors[] = ['code' => 'OLD_EDIT', 'message' => 'This hour is already logged for an earlier day. Only a supervisor can change it.'];
             }
         }
 

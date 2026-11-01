@@ -61,12 +61,10 @@ final class ReadingValidator
             $errors[] = ['code' => 'FUTURE', 'message' => 'That time hasn\'t happened yet.'];
         }
 
-        // --- OUT_OF_WINDOW (operators only) ---------------------------------------------------
+        // --- OUT_OF_WINDOW (operators: adding missing readings is allowed within the look-back) ---
         if (($user['role'] ?? '') === 'operator') {
-            $days = Setting::int('operator_edit_days', 1);
-            $earliest = $now->setTime(0, 0)->modify("-{$days} days");
-            if ($at < $earliest) {
-                $errors[] = ['code' => 'OUT_OF_WINDOW', 'message' => 'Operators can only enter today' . ($days >= 1 ? ' and yesterday' : '') . '. Ask a supervisor.'];
+            if ($at < Window::addFrom($now)) {
+                $errors[] = ['code' => 'OUT_OF_WINDOW', 'message' => 'Operators can add readings up to ' . Window::lookBackDays() . ' days back. Ask a supervisor.'];
             }
         }
 

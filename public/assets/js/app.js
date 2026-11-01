@@ -348,6 +348,7 @@
         },
 
         // ---- cells ----
+        locked: function (c) { return cfg.changeFrom !== null && this.date < cfg.changeFrom && c.saved !== null; },
         cell: function (mid, s) { return (this.cells[mid] && this.cells[mid][s]) || BLANK; },
         meterName: function (mid) { var m = this.meters.find(function (x) { return x.id === mid; }); return m ? m.name : ''; },
         numeric: function (c) { return (c.state === 'saved' || c.state === 'queued') ? U.num(c.value) : null; },
@@ -400,6 +401,8 @@
         get slotIndex() { return this.slots.indexOf(this.slot); },
         /** Days earlier than this person may change (and everything, for a viewer) open read-only. */
         get readOnly() { return cfg.editFrom === null || this.date < cfg.editFrom; },
+        /** An earlier day than the change window: gaps can be filled, saved values are a supervisor's to change. */
+        get olderDay() { return !this.readOnly && cfg.changeFrom !== null && this.date < cfg.changeFrom; },
         get dateLabel() { return U.dateLabel(this.date, cfg.today); },
         get slotNote() {
           if (this.isFuture(this.slot)) return 'Not due yet';
@@ -623,6 +626,7 @@
           this.cells = cells;
         },
         cell: function (mid) { return this.cells[mid] || BLANK; },
+        locked: function (c) { return cfg.changeFrom !== null && this.date < cfg.changeFrom && c.saved !== null; },
         flat: function () { var out = []; this.groups.forEach(function (g) { g.meters.forEach(function (m) { out.push(m); }); }); return out; },
         allIndex: function (mid) { return this.flat().findIndex(function (m) { return m.id === mid; }); },
         get total() { return this.flat().length; },
@@ -630,6 +634,8 @@
         get progressPct() { return this.total ? Math.round(this.entered / this.total * 100) : 0; },
         /** Days earlier than this person may change (and everything, for a viewer) open read-only. */
         get readOnly() { return cfg.editFrom === null || this.date < cfg.editFrom; },
+        /** An earlier day than the change window: gaps can be filled, saved values are a supervisor's to change. */
+        get olderDay() { return !this.readOnly && cfg.changeFrom !== null && this.date < cfg.changeFrom; },
         get dateLabel() { return U.dateLabel(this.date, cfg.today); },
         groupEntered: function (g) { var self = this; return g.meters.filter(function (m) { var s = self.cell(m.id).state; return s === 'saved' || s === 'queued'; }).length; },
         groupIcon: function (g) {
@@ -705,6 +711,8 @@
         },
         /** Days earlier than this person may change (and everything, for a viewer) open read-only. */
         get readOnly() { return cfg.editFrom === null || this.date < cfg.editFrom; },
+        /** An earlier day than the change window: gaps can be filled, saved values are a supervisor's to change. */
+        get olderDay() { return !this.readOnly && cfg.changeFrom !== null && this.date < cfg.changeFrom; },
         get dateLabel() { return U.dateLabel(this.date, cfg.today); },
         get loggedCount() { return this.hours.filter(function (h) { return h.logged; }).length; },
         genUrl: function (id) { return U.url('/entry/genset?meter=' + id + '&date=' + this.date); },
@@ -752,6 +760,7 @@
           this.open = firstEmpty ? firstEmpty.at : (started.length ? started[started.length - 1].at : (this.hours[0] ? this.hours[0].at : null));
         },
         toggle: function (h) { this.open = this.open === h.at ? null : h.at; },
+        hourLocked: function (h) { return cfg.changeFrom !== null && this.date < cfg.changeFrom && h.logged; },
         summary: function (h) {
           var f = h.form, out = [];
           if (f.kw) out.push(f.kw + ' kW');

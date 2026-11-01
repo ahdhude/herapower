@@ -87,8 +87,27 @@ try {
     check('14:10-style time blocked: NOT_A_SLOT', in_array('NOT_A_SLOT', codes($r), true));
     $r = $save(['meter_id' => 7, 'reading_at' => $today->modify('+1 day')->format('Y-m-d') . ' 10:00', 'value' => '10'], $sup);
     check('tomorrow blocked: FUTURE', in_array('FUTURE', codes($r), true));
-    $r = $save(['meter_id' => 7, 'reading_at' => $today->modify('-3 days')->format('Y-m-d') . ' 10:00', 'value' => '10'], $op);
-    check('operator 3 days back blocked: OUT_OF_WINDOW', in_array('OUT_OF_WINDOW', codes($r), true));
+    $r = $save(['meter_id' => 7, 'reading_at' => $today->modify('-400 days')->format('Y-m-d') . ' 10:00', 'value' => '10'], $op);
+    check('operator beyond the look-back blocked: OUT_OF_WINDOW', in_array('OUT_OF_WINDOW', codes($r), true), json_encode($r['errors'] ?? null));
+
+    // catch-up: an operator may ADD a missing reading on an older day, but not change one that is saved
+    $older = $today->modify('-5 days')->format('Y-m-d') . ' 10:00';
+    $r = $save(['meter_id' => 7, 'reading_at' => $older, 'value' => '10'], $op);
+    check('operator can add a missing reading 5 days back', $r['status'] === 'saved', json_encode($r));
+    $r = $save(['meter_id' => 7, 'reading_at' => $older, 'value' => '11'], $op);
+    check('...but cannot change it afterwards (OLD_EDIT)', $r['status'] === 'error' && in_array('OLD_EDIT', codes($r), true), json_encode($r));
+    $r = $save(['meter_id' => 7, 'reading_at' => $older, 'value' => '10'], $op);
+    check('...re-saving the same value is harmless', $r['status'] === 'saved');
+    $r = $save(['meter_id' => 7, 'reading_at' => $older, 'value' => '11', 'reason' => 'misread'], $sup);
+    check('a supervisor can change it, with a reason', $r['status'] === 'saved' && $r['reading']['value'] === '11', json_encode($r));
+
+    // generator log: same rule
+    $gOlder = $today->modify('-5 days')->format('Y-m-d') . ' 10:00';
+    $g1 = App\Models\GensetLog::save(['meter_id' => 80, 'log_at' => $gOlder, 'kw' => '500'], $op);
+    $g2 = App\Models\GensetLog::save(['meter_id' => 80, 'log_at' => $gOlder, 'kw' => '600'], $op);
+    check('genset: operator can add a missing older hour, not change it', $g1['status'] === 'saved' && $g2['status'] === 'error' && in_array('OLD_EDIT', codes($g2), true), json_encode([$g1['status'], $g2['errors'] ?? null]));
+    $g3 = App\Models\GensetLog::save(['meter_id' => 80, 'log_at' => $today->modify('-400 days')->format('Y-m-d') . ' 10:00', 'kw' => '500'], $op);
+    check('genset: beyond the look-back is blocked', in_array('OUT_OF_WINDOW', codes($g3), true));
     $r = $save(['meter_id' => 7, 'reading_at' => "$d 10:00", 'value' => '10'], $viewer);
     check('viewer cannot enter', $r['status'] === 'error' && in_array('FORBIDDEN', codes($r), true));
     $r = $save(['meter_id' => 61, 'reading_at' => "$d 00:00", 'value' => '10'], $sup);

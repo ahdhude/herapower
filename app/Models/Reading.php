@@ -8,6 +8,7 @@ use App\Core\DB;
 use App\Services\ReadingValidator;
 use App\Services\Slots;
 use App\Services\Totals;
+use App\Services\Window;
 use DateTimeImmutable;
 
 final class Reading
@@ -124,8 +125,10 @@ final class Reading
                 if (abs((float) $existing['value'] - (float) $value) < 0.0005) {
                     return ['status' => 'saved', 'errors' => [], 'warnings' => [], 'reading' => self::present($existing), 'created' => false];
                 }
-                $days = Setting::int('operator_edit_days', 1);
-                $isOld = $at < $now->setTime(0, 0)->modify("-{$days} days");
+                $isOld = $at < Window::changeFrom($now);
+                if ($isOld && ($user['role'] ?? '') === 'operator') {
+                    return self::fail('OLD_EDIT', 'This reading is already saved for an earlier day. Only a supervisor can change it.');
+                }
                 if ($isOld && ($reason === null || $reason === '')) {
                     return self::fail('REASON_REQUIRED', 'Say why you are changing an older reading.');
                 }
