@@ -12,6 +12,7 @@ use App\Core\Router;
 $r = new Router();
 
 $entry   = ['operator', 'supervisor', 'admin'];
+$look    = ['operator', 'supervisor', 'viewer', 'admin'];   // may open the entry screens (viewers read-only)
 $admin   = ['admin'];
 
 // --- auth
@@ -23,11 +24,11 @@ $r->post('/logout', [AuthController::class, 'logout']);
 $r->get('/', [TodayController::class, 'index']);
 $r->get('/more', [TodayController::class, 'more']);
 
-$r->get('/entry', [EntryController::class, 'hub'], $entry);
-$r->get('/entry/feeders/{group}', [EntryController::class, 'feeders'], $entry);
-$r->get('/entry/solar', [EntryController::class, 'solar'], $entry);
-$r->get('/entry/daily', [EntryController::class, 'daily'], $entry);
-$r->get('/entry/genset', [EntryController::class, 'genset'], $entry);
+$r->get('/entry', [EntryController::class, 'hub'], $look);
+$r->get('/entry/feeders/{group}', [EntryController::class, 'feeders'], $look);
+$r->get('/entry/solar', [EntryController::class, 'solar'], $look);
+$r->get('/entry/daily', [EntryController::class, 'daily'], $look);
+$r->get('/entry/genset', [EntryController::class, 'genset'], $look);
 
 $r->get('/reports', [ReportController::class, 'index']);
 $r->get('/reports/feeders/daily', [ReportController::class, 'feedersDaily']);
@@ -66,12 +67,12 @@ $r->post('/admin/import/issues/{id}', [Admin\ImportController::class, 'resolve']
 $r->get('/api/today', [Api\TodayController::class, 'index']);
 $r->get('/api/csrf', [Api\TodayController::class, 'csrf']);
 $r->post('/api/day-status', [Api\TodayController::class, 'approve'], ['supervisor', 'admin']);
-$r->get('/api/slots', [Api\ReadingsController::class, 'slots'], $entry);
-$r->get('/api/grid', [Api\ReadingsController::class, 'grid'], $entry);
-$r->get('/api/daily', [Api\ReadingsController::class, 'daily'], $entry);
+$r->get('/api/slots', [Api\ReadingsController::class, 'slots'], $look);
+$r->get('/api/grid', [Api\ReadingsController::class, 'grid'], $look);
+$r->get('/api/daily', [Api\ReadingsController::class, 'daily'], $look);
 $r->post('/api/readings', [Api\ReadingsController::class, 'save'], $entry);
 $r->post('/api/readings/batch', [Api\ReadingsController::class, 'batch'], $entry);
-$r->get('/api/genset', [Api\GensetController::class, 'show'], $entry);
+$r->get('/api/genset', [Api\GensetController::class, 'show'], $look);
 $r->post('/api/genset-logs', [Api\GensetController::class, 'save'], $entry);
 $r->get('/api/chart', [Api\ChartController::class, 'index']);
 

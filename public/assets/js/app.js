@@ -398,9 +398,12 @@
         get completeSlots() { var n = 0; for (var i = 0; i < this.slots.length; i++) if (this.slotDone(this.slots[i])) n++; return n; },
         get progressPct() { return this.slots.length ? Math.round(this.completeSlots / this.slots.length * 100) : 0; },
         get slotIndex() { return this.slots.indexOf(this.slot); },
+        /** Days earlier than this person may change (and everything, for a viewer) open read-only. */
+        get readOnly() { return cfg.editFrom === null || this.date < cfg.editFrom; },
         get dateLabel() { return U.dateLabel(this.date, cfg.today); },
         get slotNote() {
           if (this.isFuture(this.slot)) return 'Not due yet';
+          if (this.readOnly) return this.slotDone(this.slot) ? 'Complete' : 'No reading recorded';
           if (this.slotDone(this.slot)) return 'Complete';
           if (this.slot === this.due) return 'Due now';
           if (this.isMissed(this.slot)) return 'Missed — enter late readings now';
@@ -625,6 +628,8 @@
         get total() { return this.flat().length; },
         get entered() { var self = this; return this.flat().filter(function (m) { var s = self.cell(m.id).state; return s === 'saved' || s === 'queued'; }).length; },
         get progressPct() { return this.total ? Math.round(this.entered / this.total * 100) : 0; },
+        /** Days earlier than this person may change (and everything, for a viewer) open read-only. */
+        get readOnly() { return cfg.editFrom === null || this.date < cfg.editFrom; },
         get dateLabel() { return U.dateLabel(this.date, cfg.today); },
         groupEntered: function (g) { var self = this; return g.meters.filter(function (m) { var s = self.cell(m.id).state; return s === 'saved' || s === 'queued'; }).length; },
         groupIcon: function (g) {
@@ -698,6 +703,8 @@
           window.addEventListener('hh:saved', function (e) { if (e.detail.kind === 'genset') self.load(); });
           return this.load();
         },
+        /** Days earlier than this person may change (and everything, for a viewer) open read-only. */
+        get readOnly() { return cfg.editFrom === null || this.date < cfg.editFrom; },
         get dateLabel() { return U.dateLabel(this.date, cfg.today); },
         get loggedCount() { return this.hours.filter(function (h) { return h.logged; }).length; },
         genUrl: function (id) { return U.url('/entry/genset?meter=' + id + '&date=' + this.date); },

@@ -14,7 +14,8 @@ final class SettingsController
     public const FIELDS = [
         'Entry rules' => [
             'late_minutes'       => ['Late after (minutes)', 'A reading saved this long after its slot is flagged late.', 'int'],
-            'operator_edit_days' => ['Operator edit window (days)', '1 = today and yesterday.', 'int'],
+            'operator_edit_days' => ['Operator edit window (days)', 'How far back operators can change readings. 1 = today and yesterday.', 'int'],
+            'view_back_days'     => ['Look-back for operators and viewers (days)', 'How far back they can open feeder, solar, daily-meter and genset screens to look. Operators can still only change the days above; older days open read-only. Supervisors and admins can always go back a year.', 'int'],
             'genset_day_start'   => ['Genset log day starts', 'The log day runs 24 hours from this time.', 'time'],
         ],
         'Warnings' => [
@@ -83,7 +84,7 @@ final class SettingsController
             return Response::redirect(url('/admin/settings'));
         }
         // Required settings can't be blank — keep their current value.
-        foreach (['late_minutes', 'operator_edit_days', 'median_days', 'spike_factor', 'daily_change_pct', 'genset_day_start'] as $req_) {
+        foreach (['late_minutes', 'operator_edit_days', 'view_back_days', 'median_days', 'spike_factor', 'daily_change_pct', 'genset_day_start'] as $req_) {
             if ($clean[$req_] === null) {
                 $clean[$req_] = Setting::get($req_);
             }

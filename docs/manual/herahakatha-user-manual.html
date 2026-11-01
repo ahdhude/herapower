@@ -126,10 +126,11 @@
   <div class="box good"><b class="t">Nothing to calculate</b>You only ever type what the meter shows. Energy (kWh), daily use, kWh per litre and solar share are all worked out by the app.</div>
 
   <h3>Roles</h3>
-  <p>Your administrator gives you one of four roles. The role decides which menu items you see.</p>
+  <p>Your administrator gives you one of four roles. The role decides which menu items you see. Viewers see the readings screens under <b>Readings</b>, to look but not change.</p>
   <table>
     <tr><th></th><th class="c">Operator</th><th class="c">Supervisor</th><th class="c">Viewer</th><th class="c">Admin</th></tr>
     <tr><td>Enter readings for today and yesterday</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
+    <tr><td>Look at earlier days (read-only)</td><td class="c">90 days</td><td class="c">a year</td><td class="c">90 days</td><td class="c">a year</td></tr>
     <tr><td>Change older readings (with a reason)</td><td class="c no">–</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
     <tr><td>Accept a counter that went backwards (meter replaced)</td><td class="c no">–</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
     <tr><td>Approve a day</td><td class="c no">–</td><td class="c yes">✓</td><td class="c no">–</td><td class="c yes">✓</td></tr>
@@ -226,7 +227,7 @@
       <ul>
         <li><b>Big time</b> (23:00): the hour you are entering. Use the arrows to go to an earlier or later hour.</li>
         <li><b>Hour strip</b>: <span class="pill p-ok">green</span> complete, <span class="pill p-info">blue outline</span> due, <span class="pill p-warn">amber</span> missed. Tap any hour to jump to it.</li>
-        <li><b>Date button</b>: <i>Today</i> by default. Operators can go back to yesterday.</li>
+        <li><b>Date button</b>: <i>Today</i> by default. Tap the arrows or the date to look at an earlier day (operators and viewers can go back about 3 months, supervisors a year). A day you cannot change opens <b>view only</b> with a blue notice.</li>
         <li><b>last 13.4</b> under a name shows last hour's value, a handy check.</li>
         <li><b>This hour</b> bar at the bottom adds up the feeders on this page.</li>
       </ul>
@@ -369,7 +370,8 @@
   <p>The new value replaces the old one, and the app keeps a record of the change (old value, new value, who and when) in the audit log.</p>
   <table>
     <tr><th>Who</th><th>Which readings can they change</th></tr>
-    <tr><td><b>Operator</b></td><td>Today and yesterday. Older days are refused with “Operators can only enter today and yesterday. Ask a supervisor.”</td></tr>
+    <tr><td><b>Operator</b></td><td>Today and yesterday. Older days open <b>view only</b>, so you can look but not change; ask a supervisor to correct anything.</td></tr>
+    <tr><td><b>Viewer</b></td><td>None: viewers can look at readings and reports but not change them.</td></tr>
     <tr><td><b>Supervisor / Admin</b></td><td>Any day. For a reading older than yesterday the app asks <b>why</b> you are changing it, and the reason is saved.</td></tr>
   </table>
   <div class="box tip"><b class="t">Missed an hour?</b>Enter it late. The reading is kept, shows a <span class="pill p-warn">late</span> tag, and the day is complete again. It is far better to enter a late reading than to leave a gap.</div>
@@ -466,7 +468,8 @@
   <table>
     <tr><th>Setting</th><th>What it does</th></tr>
     <tr><td>Late after (minutes)</td><td>A reading saved later than this after its hour gets the <i>late</i> tag. Default 20.</td></tr>
-    <tr><td>Operator edit window (days)</td><td>1 means operators can enter today and yesterday.</td></tr>
+    <tr><td>Operator edit window (days)</td><td>How far back operators can <i>change</i> readings. 1 means today and yesterday.</td></tr>
+    <tr><td>Look-back for operators and viewers (days)</td><td>How far back they can <i>look</i> at the feeder, solar, daily-meter and genset screens. Default 90. Days outside the edit window open view only.</td></tr>
     <tr><td>Median window, Spike factor and floors</td><td>How unusual a feeder or solar value must be to raise a warning. Defaults suit the powerhouse; change them only after a few weeks of clean data.</td></tr>
     <tr><td>Daily change (%)</td><td>How far a day's counter use may differ from the 7-day average before a warning.</td></tr>
     <tr><td>Compare feeders with HV Network</td><td>Turn on once you have confirmed all feeders sit under the HV Network.</td></tr>
@@ -497,7 +500,7 @@
     <tr><td>Enter a plain number such as 354 or 12.5.</td><td><span class="pill p-bad">Blocked</span></td><td>The box has letters, a second decimal point, a slash or is blank. Retype it.</td></tr>
     <tr><td>A reading can't be negative.</td><td><span class="pill p-bad">Blocked</span></td><td>Remove the minus sign.</td></tr>
     <tr><td>That time hasn't happened yet.</td><td><span class="pill p-bad">Blocked</span></td><td>You are entering a later hour. Go back to the due hour.</td></tr>
-    <tr><td>Operators can only enter today and yesterday. Ask a supervisor.</td><td><span class="pill p-bad">Blocked</span></td><td>Ask a supervisor to enter or change that reading.</td></tr>
+    <tr><td>Operators can only enter today and yesterday. Ask a supervisor.</td><td><span class="pill p-bad">Blocked</span></td><td>That day is view only for you. Ask a supervisor to enter or change that reading.</td></tr>
     <tr><td>That time isn't a reading slot for this meter.</td><td><span class="pill p-bad">Blocked</span></td><td>Readings are on the hour (or every 30 min for solar). Use the hour strip.</td></tr>
     <tr><td>Lower than the previous reading … Check the meter.</td><td><span class="pill p-bad">Blocked</span></td><td>Re-read the counter. If the meter was replaced or reset, ask a supervisor to override.</td></tr>
     <tr><td>Higher than the next day's reading …</td><td><span class="pill p-bad">Blocked</span></td><td>A later day already has a smaller counter. Check both days' readings.</td></tr>
@@ -517,7 +520,7 @@
   <h3>I typed a value and nothing happened.</h3>
   <p>The value saves when you press <b>Enter / Next</b> or tap another box. Check the icon at the right of the box: a green tick means saved, a red cross means it was refused (read the message), a pencil means you have not left the box yet.</p>
   <h3>I can't find yesterday's hour.</h3>
-  <p>Use the date button at the top of the entry screen and tap the left arrow. Operators can go back one day. Older days need a supervisor.</p>
+  <p>Use the date button at the top of the screen and tap the left arrow. You can go back about 3 months. Days older than yesterday open view only for operators; a supervisor can correct them.</p>
   <h3>The page shows “Offline” but my internet is fine.</h3>
   <p>Wait a few seconds, then tap the badge at the top to send now. If it stays offline, check the phone's Wi-Fi.</p>
   <h3>I entered an hour twice by mistake.</h3>

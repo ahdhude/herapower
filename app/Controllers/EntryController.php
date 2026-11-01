@@ -18,7 +18,7 @@ final class EntryController
     public function hub(Request $req): string
     {
         return View::render('entry/hub', [
-            'title'    => 'Enter readings',
+            'title'    => Auth::can('enter') ? 'Enter readings' : 'Readings',
             'active'   => 'entry',
             'progress' => Progress::forDay(now()),
         ]);
@@ -81,6 +81,7 @@ final class EntryController
                 'slot'           => $slotKey,
                 'today'          => $now->format('Y-m-d'),
                 'minDate'        => $this->minDate($now),
+                'editFrom'       => $this->editFrom($now),
                 'canOverride'    => Auth::can('override_counter'),
                 'sumCheck'       => Setting::get('feeder_sum_check') === '1',
                 'sumTolerance'   => Setting::float('feeder_sum_tolerance_pct', 25),
@@ -100,6 +101,7 @@ final class EntryController
                 'date'        => $this->date($req),
                 'today'       => $now->format('Y-m-d'),
                 'minDate'     => $this->minDate($now),
+                'editFrom'    => $this->editFrom($now),
                 'canOverride' => Auth::can('override_counter'),
             ],
         ]);
@@ -129,6 +131,7 @@ final class EntryController
                 'date'     => $date,
                 'today'    => $logDay,
                 'minDate'  => $this->minDate($now),
+                'editFrom' => $this->editFrom($now),
                 'fields'   => array_map(
                     static fn ($k, $f) => ['key' => $k, 'label' => $f[0], 'unit' => $f[1]],
                     array_keys(\App\Models\GensetLog::FIELDS),
@@ -150,13 +153,28 @@ final class EntryController
         return $d;
     }
 
-    /** Earliest date the date picker offers (operators: edit window; others: a year back). */
+    /**
+     * Earliest day the date picker offers. Operators and viewers can look back `view_back_days`
+     * (Admin → Settings); supervisors and admins a year. Looking is separate from changing: see editFrom().
+     */
     private function minDate(DateTimeImmutable $now): string
     {
+        $days = Auth::hasRole('operator', 'viewer')
+            ? max(Setting::int('view_back_days', 90), Setting::int('operator_edit_days', 1))
+            : 365;
+        return $now->modify("-{$days} days")->format('Y-m-d');
+    }
+
+    /** Earliest day this person may change a reading. null = nothing (viewers); earlier days open read-only. */
+    private function editFrom(DateTimeImmutable $now): ?string
+    {
+        if (!Auth::can('enter')) {
+            return null;
+        }
         if (Auth::hasRole('operator')) {
             return $now->modify('-' . Setting::int('operator_edit_days', 1) . ' days')->format('Y-m-d');
         }
-        return $now->modify('-365 days')->format('Y-m-d');
+        return '2000-01-01'; // supervisors and admins: any day (older changes ask for a reason)
     }
 
     private static function isKind(array $group, string $kind): bool

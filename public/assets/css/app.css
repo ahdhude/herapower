@@ -643,3 +643,7 @@ a.hh-list__item:hover, button.hh-list__item:hover { background: var(--hh-surface
 .hh-viewtoggle button.is-active { background: var(--hh-accent); color: #fff; box-shadow: 0 4px 14px rgba(45, 91, 255, .35); }
 .hh-chartbox--bars { min-height: 220px; }
 @media print { .hh-viewtoggle { display: none !important; } }
+
+.hh-banner--info { background: var(--hh-info-soft); color: var(--hh-info); border: 1px solid color-mix(in srgb, var(--hh-info) 25%, transparent); }
+.hh-input:disabled, .hh-cell:disabled, .hh-f__box input:disabled { cursor: default; }
+.hh-input:disabled { opacity: 1; background: var(--hh-surface-2); color: var(--hh-text); }

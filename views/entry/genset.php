@@ -20,6 +20,8 @@
     <small class="text-secondary">Log day runs 08:00 → 07:00 next day · <span x-text="loggedCount"></span> of 24 hours logged</small>
   </div>
 
+  <div class="hh-banner hh-banner--info" x-show="readOnly" x-cloak><i class="bi bi-eye"></i>
+    <span x-text="cfg.editFrom === null ? 'You can look at readings here but not change them.' : 'View only: this day is older than you can change. Ask a supervisor if something needs correcting.'"></span></div>
   <div class="hh-banner hh-banner--warn" x-show="!cfg.hasLimits"><i class="bi bi-info-circle"></i> No alarm limits are set yet, so out-of-range values will not be flagged. An admin can add them under Settings.</div>
   <div class="hh-banner hh-banner--warn" x-show="fromCache"><i class="bi bi-cloud-slash"></i> You're offline — showing the last saved copy.</div>
   <div class="hh-banner hh-banner--error" x-show="loadError" x-text="loadError"></div>
@@ -47,7 +49,7 @@
               <label class="hh-f" :class="{'is-bad': h.bad[f.key]}">
                 <span x-text="f.label"></span>
                 <span class="hh-f__box">
-                  <input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" x-model="h.form[f.key]" @input="h.dirty = true; h.state = 'idle'; h.bad[f.key] = false" :aria-label="f.label">
+                  <input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" :disabled="readOnly" x-model="h.form[f.key]" @input="h.dirty = true; h.state = 'idle'; h.bad[f.key] = false" :aria-label="f.label">
                   <em x-text="f.unit"></em>
                 </span>
               </label>
@@ -57,10 +59,10 @@
           <div class="hh-visual">
             <span class="hh-visual__label">Visual check</span>
             <div class="hh-toggle" role="group" aria-label="Visual check">
-              <button type="button" :class="{'is-on': h.form.visual_ok === true}" @click="h.form.visual_ok = true; h.dirty = true">OK</button>
-              <button type="button" :class="{'is-on is-bad': h.form.visual_ok === false}" @click="h.form.visual_ok = false; h.dirty = true">Not OK</button>
+              <button type="button" :disabled="readOnly" :class="{'is-on': h.form.visual_ok === true}" @click="h.form.visual_ok = true; h.dirty = true">OK</button>
+              <button type="button" :disabled="readOnly" :class="{'is-on is-bad': h.form.visual_ok === false}" @click="h.form.visual_ok = false; h.dirty = true">Not OK</button>
             </div>
-            <input type="text" class="form-control" maxlength="255" placeholder="Note (leaks, noise, smell…)" x-model="h.form.visual_note" @input="h.dirty = true" aria-label="Visual check note">
+            <input type="text" class="form-control" maxlength="255" placeholder="Note (leaks, noise, smell…)" :disabled="readOnly" x-model="h.form.visual_note" @input="h.dirty = true" aria-label="Visual check note">
           </div>
 
           <div class="hh-issue is-error" x-show="h.state === 'error'"><ul><template x-for="(m, i) in h.msgs" :key="i"><li><i class="bi bi-x-octagon-fill"></i> <span x-text="m.message"></span></li></template></ul></div>
@@ -73,8 +75,8 @@
           </div>
 
           <div class="hh-hour__actions">
-            <button type="button" class="btn btn-outline-secondary" @click="copyPrev(h)" :disabled="!prevLogged(h)"><i class="bi bi-files"></i> Copy last hour</button>
-            <button type="button" class="btn btn-primary" @click="save(h, false)" :disabled="h.saving || !h.dirty"><span x-show="!h.saving"><i class="bi bi-check2-circle"></i> Save hour</span><span x-show="h.saving">Saving…</span></button>
+            <button type="button" class="btn btn-outline-secondary" @click="copyPrev(h)" :disabled="!prevLogged(h) || readOnly"><i class="bi bi-files"></i> Copy last hour</button>
+            <button type="button" class="btn btn-primary" @click="save(h, false)" :disabled="h.saving || !h.dirty || readOnly"><span x-show="!h.saving"><i class="bi bi-check2-circle"></i> Save hour</span><span x-show="h.saving">Saving…</span></button>
           </div>
         </div>
       </section>

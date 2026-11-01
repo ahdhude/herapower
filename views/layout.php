@@ -13,9 +13,8 @@ $today  = now();
 
 $nav = [];
 $nav[] = ['today', 'Today', 'house-door', '/'];
-if ($canEnter) {
-    $nav[] = ['entry', 'Enter', 'pencil-square', '/entry'];
-}
+// Everyone can open the readings; viewers get them read-only.
+$nav[] = $canEnter ? ['entry', 'Enter', 'pencil-square', '/entry'] : ['entry', 'Readings', 'journal-text', '/entry'];
 $nav[] = ['reports', 'Reports', 'bar-chart-line', '/reports'];
 
 $entryLinks = [

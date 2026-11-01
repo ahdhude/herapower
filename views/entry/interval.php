@@ -30,6 +30,8 @@ $isSolar = $kind === 'solar';
     </div>
   </div>
 
+  <div class="hh-banner hh-banner--info" x-show="readOnly" x-cloak><i class="bi bi-eye"></i>
+    <span x-text="cfg.editFrom === null ? 'You can look at readings here but not change them.' : 'View only: this day is older than you can change. Ask a supervisor if something needs correcting.'"></span></div>
   <div class="hh-banner hh-banner--warn" x-show="fromCache"><i class="bi bi-cloud-slash"></i> You're offline — showing the last saved copy. New values will send when the connection returns.</div>
   <div class="hh-banner hh-banner--error" x-show="loadError" x-text="loadError"></div>
   <div class="hh-skeleton" x-show="loading"><span></span><span></span><span></span><span></span></div>
@@ -69,7 +71,7 @@ $isSolar = $kind === 'solar';
             </div>
             <div class="hh-row__input">
               <input :id="'f' + m.id" class="hh-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false"
-                     placeholder="—" :disabled="isFuture(slot)" :data-idx="mi"
+                     placeholder="—" :disabled="isFuture(slot) || readOnly" :data-idx="mi"
                      x-model="c.value" @input="touch(c)" @blur="commit(c)" @keydown.enter.prevent="enter($event, mi)" :aria-label="m.name + ' ' + m.unit">
               <span class="hh-unit" x-text="m.unit"></span>
               <span class="hh-state" :class="'is-' + c.state" :title="stateText(c)">
@@ -115,7 +117,7 @@ $isSolar = $kind === 'solar';
                 <template x-for="(m, mi) in meters" :key="m.id">
                   <td x-data="{ get c() { return cell(m.id, s) } }" :class="'is-' + c.state">
                     <input class="hh-cell" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"
-                           :disabled="isFuture(s)" :data-r="si" :data-c="mi" :aria-label="m.name + ' ' + s"
+                           :disabled="isFuture(s) || readOnly" :data-r="si" :data-c="mi" :aria-label="m.name + ' ' + s"
                            x-model="c.value" @input="touch(c)" @blur="commit(c)"
                            @keydown="gridKey($event, si, mi)" @paste="paste($event, si, mi)" :title="c.msgs.length ? c.msgs[0].message : (c.by ? c.by : '')">
                   </td>

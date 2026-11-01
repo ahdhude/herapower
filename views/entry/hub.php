@@ -1,4 +1,4 @@
-<p class="hh-lead">Pick a log. Each opens on the reading that is due.</p>
+<p class="hh-lead"><?= App\Core\Auth::can('enter') ? 'Pick a log. Each opens on the reading that is due.' : 'Pick a log to look at its readings. You can look back through earlier days.' ?></p>
 <div class="hh-grid-cards">
   <?php foreach ($progress['logs'] as $l): ?>
     <article class="hh-log-card is-<?= e($l['state']) ?>">

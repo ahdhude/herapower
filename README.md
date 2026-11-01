@@ -58,6 +58,7 @@ The old `HeraHakatha` folder in `www` is a different, earlier app and is untouch
 | | operator | supervisor | viewer | admin |
 |---|:-:|:-:|:-:|:-:|
 | Enter readings (today, yesterday) | ✓ | ✓ | | ✓ |
+| Look at earlier days (read-only; set in Settings, default 90 days) | ✓ | ✓ (a year) | ✓ | ✓ (a year) |
 | Edit older readings (reason required), override a counter, approve a day | | ✓ | | ✓ |
 | Reports | today's daily reports | ✓ | ✓ | ✓ |
 | Meters, users, settings, audit | | | | ✓ |
